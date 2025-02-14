@@ -15,12 +15,12 @@ import org.springframework.stereotype.Service;
 import java.util.Objects;
 
 @Service
-public class UserServiceImp implements UserService {
+public class AuthServiceImp implements AuthService {
     private final UserRepository userRepository;
     private final SignInMapper signInMapper;
     private final SignUpMapper signUpMapper;
 
-    public UserServiceImp(UserRepository userRepository, SignInMapper signInMapper, SignUpMapper signUpMapper) {
+    public AuthServiceImp(UserRepository userRepository, SignInMapper signInMapper, SignUpMapper signUpMapper) {
         this.userRepository = userRepository;
         this.signInMapper = signInMapper;
         this.signUpMapper = signUpMapper;

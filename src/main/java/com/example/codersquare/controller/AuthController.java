@@ -6,17 +6,17 @@ import com.example.codersquare.dto.SignUpRequest;
 import com.example.codersquare.exception.InvalidCredentialsException;
 import com.example.codersquare.exception.UserAlreadyExistsException;
 import com.example.codersquare.exception.UserNotFoundException;
-import com.example.codersquare.service.UserServiceImp;
+import com.example.codersquare.service.AuthServiceImp;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1")
-public class UserController {
-    private final UserServiceImp userServiceImp;
+public class AuthController {
+    private final AuthServiceImp userServiceImp;
 
-    public UserController(UserServiceImp userServiceImp) {
+    public AuthController(AuthServiceImp userServiceImp) {
         this.userServiceImp = userServiceImp;
     }
 

@@ -5,7 +5,6 @@ import com.example.codersquare.dto.SignInResponse;
 import com.example.codersquare.model.User;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
 
 @Service
 public class SignInMapper implements Mapper<User, SignInRequest, SignInResponse> {
