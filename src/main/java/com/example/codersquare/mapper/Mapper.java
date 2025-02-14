@@ -1,7 +1,7 @@
 package com.example.codersquare.mapper;
 
-public interface Mapper<Entity, EntityDto> {
-    Entity mapToEntity(EntityDto entityDTO);
+public interface Mapper<Entity, ReqDTO, ResDTO> {
+    Entity mapToEntity(ReqDTO reqDTO);
 
-    EntityDto mapToDTO(Entity entity);
+    ResDTO mapToResponse(Entity entity);
 }
