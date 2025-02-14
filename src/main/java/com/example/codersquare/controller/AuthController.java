@@ -22,27 +22,13 @@ public class AuthController {
 
     @PostMapping(path = "/signUp")
     public ResponseEntity<String> signUp(@RequestBody SignUpRequest signUpRequest) {
-        try {
-            userServiceImp.signUpUser(signUpRequest);
-            return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (UserAlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-        }
+        userServiceImp.signUpUser(signUpRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
     }
 
     @PostMapping(path = "/signIn")
     public ResponseEntity<?> signIn(@RequestBody SignInRequest signInRequest) {
-        try {
-            SignInResponse signInResponse = userServiceImp.signInUser(signInRequest);
-            return ResponseEntity.ok(signInResponse);
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (InvalidCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        SignInResponse signInResponse = userServiceImp.signInUser(signInRequest);
+        return ResponseEntity.ok(signInResponse);
     }
 }

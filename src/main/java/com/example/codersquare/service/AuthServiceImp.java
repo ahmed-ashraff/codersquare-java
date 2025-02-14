@@ -28,30 +28,46 @@ public class AuthServiceImp implements AuthService {
 
     @Override
     public void signUpUser(SignUpRequest signUpRequest) {
-        if (signUpRequest.email() == null || signUpRequest.username() == null || signUpRequest.password() == null ||
-                signUpRequest.firstName() == null || signUpRequest.lastName() == null) {
-            throw new IllegalArgumentException("All fields are required");
-        }
-
-        boolean existing = userRepository.existsUserByUserName(signUpRequest.username()) || userRepository.existsUserByEmail(signUpRequest.email());
-
-        if (existing) {
-            throw new UserAlreadyExistsException("User already exists");
-        }
+        validateSignUpRequest(signUpRequest);
+        checkIfUserExists(signUpRequest);
         userRepository.save(signUpMapper.mapToEntity(signUpRequest));
     }
 
     @Override
     public SignInResponse signInUser(SignInRequest signInRequest) {
-        if (signInRequest.login() == null || signInRequest.password() == null) {
-            throw new IllegalArgumentException("Username/Email and password are required");
-        }
+        validateSignInRequest(signInRequest);
 
+        User user = validateUserCredentials(signInRequest);
+        return signInMapper.mapToResponse(user);
+    }
+
+    private void checkIfUserExists(SignUpRequest signUpRequest) {
+        boolean existing = userRepository.existsUserByUserName(signUpRequest.username()) || userRepository.existsUserByEmail(signUpRequest.email());
+
+        if (existing) {
+            throw new UserAlreadyExistsException("User already exists");
+        }
+    }
+
+    private static void validateSignUpRequest(SignUpRequest signUpRequest) {
+        if (signUpRequest.email() == null || signUpRequest.username() == null || signUpRequest.password() == null ||
+                signUpRequest.firstName() == null || signUpRequest.lastName() == null) {
+            throw new IllegalArgumentException("All fields are required");
+        }
+    }
+
+    private User validateUserCredentials(SignInRequest signInRequest) {
         User user = userRepository.findByUserNameOrEmail(signInRequest.login(), signInRequest.login()).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         if (!Objects.equals(user.getPassword(), signInRequest.password())) {
             throw new InvalidCredentialsException("Invalid credentials");
         }
-        return signInMapper.mapToResponse(user);
+        return user;
+    }
+
+    private static void validateSignInRequest(SignInRequest signInRequest) {
+        if (signInRequest.login() == null || signInRequest.password() == null) {
+            throw new IllegalArgumentException("Username/Email and password are required");
+        }
     }
 }
