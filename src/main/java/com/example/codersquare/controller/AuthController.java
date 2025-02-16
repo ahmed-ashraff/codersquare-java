@@ -3,12 +3,8 @@ package com.example.codersquare.controller;
 import com.example.codersquare.dto.SignInRequest;
 import com.example.codersquare.dto.SignInResponse;
 import com.example.codersquare.dto.SignUpRequest;
-import com.example.codersquare.exception.InvalidCredentialsException;
-import com.example.codersquare.exception.UserAlreadyExistsException;
-import com.example.codersquare.exception.UserNotFoundException;
+import com.example.codersquare.dto.SignUpResponse;
 import com.example.codersquare.service.AuthServiceImp;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,14 +17,12 @@ public class AuthController {
     }
 
     @PostMapping(path = "/signUp")
-    public ResponseEntity<String> signUp(@RequestBody SignUpRequest signUpRequest) {
-        userServiceImp.signUpUser(signUpRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
+    public SignUpResponse signUp(@RequestBody SignUpRequest signUpRequest) {
+        return userServiceImp.signUpUser(signUpRequest);
     }
 
     @PostMapping(path = "/signIn")
-    public ResponseEntity<?> signIn(@RequestBody SignInRequest signInRequest) {
-        SignInResponse signInResponse = userServiceImp.signInUser(signInRequest);
-        return ResponseEntity.ok(signInResponse);
+    public SignInResponse signIn(@RequestBody SignInRequest signInRequest) {
+        return userServiceImp.signInUser(signInRequest);
     }
 }

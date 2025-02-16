@@ -1,6 +1,7 @@
 package com.example.codersquare.controller;
 
 import com.example.codersquare.exception.InvalidCredentialsException;
+import com.example.codersquare.exception.UrlPostAlreadyExistsException;
 import com.example.codersquare.exception.UserAlreadyExistsException;
 import com.example.codersquare.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -29,5 +30,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UrlPostAlreadyExistsException.class)
+    public ResponseEntity<?> handleUrlPostAlreadyExistsException(UrlPostAlreadyExistsException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
     }
 }

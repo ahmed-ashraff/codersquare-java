@@ -3,6 +3,7 @@ package com.example.codersquare.service;
 import com.example.codersquare.dto.SignInRequest;
 import com.example.codersquare.dto.SignInResponse;
 import com.example.codersquare.dto.SignUpRequest;
+import com.example.codersquare.dto.SignUpResponse;
 import com.example.codersquare.exception.InvalidCredentialsException;
 import com.example.codersquare.exception.UserNotFoundException;
 import com.example.codersquare.mapper.SignInMapper;
@@ -27,10 +28,11 @@ public class AuthServiceImp implements AuthService {
     }
 
     @Override
-    public void signUpUser(SignUpRequest signUpRequest) {
+    public SignUpResponse signUpUser(SignUpRequest signUpRequest) {
         validateSignUpRequest(signUpRequest);
         checkIfUserExists(signUpRequest);
         userRepository.save(signUpMapper.mapToEntity(signUpRequest));
+        return new SignUpResponse();
     }
 
     @Override
