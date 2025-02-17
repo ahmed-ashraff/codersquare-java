@@ -12,6 +12,7 @@ import com.example.codersquare.model.User;
 import com.example.codersquare.repository.UserRepository;
 import com.example.codersquare.exception.UserAlreadyExistsException;
 import com.example.codersquare.security.JwtTokenProvider;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -22,13 +23,16 @@ public class AuthServiceImp implements AuthService {
     private final SignInMapper signInMapper;
     private final SignUpMapper signUpMapper;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
 
-    public AuthServiceImp(UserRepository userRepository, SignInMapper signInMapper, SignUpMapper signUpMapper, JwtTokenProvider jwtTokenProvider) {
+    public AuthServiceImp(UserRepository userRepository, SignInMapper signInMapper, SignUpMapper signUpMapper, JwtTokenProvider jwtTokenProvider,
+                          PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.signInMapper = signInMapper;
         this.signUpMapper = signUpMapper;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -66,7 +70,7 @@ public class AuthServiceImp implements AuthService {
     private User validateUserCredentials(SignInRequest signInRequest) {
         User user = userRepository.findByUserNameOrEmail(signInRequest.login(), signInRequest.login()).orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        if (!Objects.equals(user.getPassword(), signInRequest.password())) {
+        if (!passwordEncoder.matches(signInRequest.password(), user.getPassword())) {
             throw new InvalidCredentialsException("Invalid credentials");
         }
         return user;
