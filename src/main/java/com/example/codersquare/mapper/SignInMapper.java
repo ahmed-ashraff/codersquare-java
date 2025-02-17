@@ -28,7 +28,7 @@ public class SignInMapper implements Mapper<User, SignInRequest, SignInResponse>
                 user.getLastName(),
                 user.getEmail(),
                 user.getUsername(),
-                jwtTokenProvider.generateJWT(user.getUsername())
+                jwtTokenProvider.generateJWT(user.getUsername(), user.getId())
         );
     }
 }

@@ -33,7 +33,7 @@ public class SignUpMapper implements Mapper<User, SignUpRequest, SignUpResponse>
 
     @Override
     public SignUpResponse mapToResponse(User user) {
-        String jwt = jwtTokenProvider.generateJWT(user.getUsername());
+        String jwt = jwtTokenProvider.generateJWT(user.getUsername(), user.getId());
         return new SignUpResponse(jwt);
     }
 }

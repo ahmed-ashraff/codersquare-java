@@ -11,7 +11,11 @@ import com.example.codersquare.model.Post;
 import com.example.codersquare.model.User;
 import com.example.codersquare.repository.PostRepository;
 import com.example.codersquare.repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 
 @Service
@@ -44,7 +48,11 @@ public class PostServiceImp implements PostService {
     }
 
     private User checkIfUrlExists(CreatePostRequest createPostRequest) {
-        User user = userRepository.findById(createPostRequest.userId()).orElseThrow(() -> new UserNotFoundException("User not found with ID: " + createPostRequest.userId()));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UUID userId = (UUID) authentication.getDetails();
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
         if (postRepository.existsPostByUrl(createPostRequest.url())) {
             throw new UrlPostAlreadyExistsException("Url already exists");
@@ -53,7 +61,7 @@ public class PostServiceImp implements PostService {
     }
 
     private static void validateCreatePostRequest(CreatePostRequest createPostRequest) {
-        if (createPostRequest.url() == null || createPostRequest.title() == null || createPostRequest.userId() == null) {
+        if (createPostRequest.url() == null || createPostRequest.title() == null) {
             throw new IllegalArgumentException("title, url and userId are required");
         }
     }

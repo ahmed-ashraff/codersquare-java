@@ -39,9 +39,11 @@ public class AuthServiceImp implements AuthService {
     public SignUpResponse signUpUser(SignUpRequest signUpRequest) {
         validateSignUpRequest(signUpRequest);
         checkIfUserExists(signUpRequest);
-        userRepository.save(signUpMapper.mapToEntity(signUpRequest));
 
-        String jwt = jwtTokenProvider.generateJWT(signUpRequest.username());
+        User user = signUpMapper.mapToEntity(signUpRequest);
+        userRepository.save(user);
+
+        String jwt = jwtTokenProvider.generateJWT(signUpRequest.username(), user.getId());
         return new SignUpResponse(jwt);
     }
 
