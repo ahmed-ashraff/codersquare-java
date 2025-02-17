@@ -1,4 +1,6 @@
 package com.example.codersquare.dto;
 
-public record SignUpResponse() {
+public record SignUpResponse(
+        String jwt
+) {
 }

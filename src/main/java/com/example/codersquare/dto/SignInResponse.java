@@ -7,6 +7,7 @@ public record SignInResponse(
         String firstName,
         String lastName,
         String email,
-        String username
+        String username,
+        String jwt
 ) {
 }

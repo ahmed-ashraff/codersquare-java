@@ -3,12 +3,19 @@ package com.example.codersquare.mapper;
 import com.example.codersquare.dto.SignUpRequest;
 import com.example.codersquare.dto.SignUpResponse;
 import com.example.codersquare.model.User;
+import com.example.codersquare.security.JwtTokenProvider;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
 public class SignUpMapper implements Mapper<User, SignUpRequest, SignUpResponse> {
+    private final JwtTokenProvider jwtTokenProvider;
+
+    public SignUpMapper(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
+
     @Override
     public User mapToEntity(SignUpRequest signUpRequest) {
         User user = new User();
@@ -23,6 +30,7 @@ public class SignUpMapper implements Mapper<User, SignUpRequest, SignUpResponse>
 
     @Override
     public SignUpResponse mapToResponse(User user) {
-        return new SignUpResponse();
+        String jwt = jwtTokenProvider.generateJWT(user.getUsername());
+        return new SignUpResponse(jwt);
     }
 }

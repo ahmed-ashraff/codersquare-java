@@ -1,5 +1,6 @@
 package com.example.codersquare.controller;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.codersquare.exception.InvalidCredentialsException;
 import com.example.codersquare.exception.UrlPostAlreadyExistsException;
 import com.example.codersquare.exception.UserAlreadyExistsException;
@@ -11,6 +12,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(JWTVerificationException.class)
+    public ResponseEntity<String> handleJWTVerificationException(JWTVerificationException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<?> handleUserAlreadyExistsException(UserAlreadyExistsException e) {

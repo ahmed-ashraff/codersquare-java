@@ -11,6 +11,7 @@ import com.example.codersquare.mapper.SignUpMapper;
 import com.example.codersquare.model.User;
 import com.example.codersquare.repository.UserRepository;
 import com.example.codersquare.exception.UserAlreadyExistsException;
+import com.example.codersquare.security.JwtTokenProvider;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -20,11 +21,14 @@ public class AuthServiceImp implements AuthService {
     private final UserRepository userRepository;
     private final SignInMapper signInMapper;
     private final SignUpMapper signUpMapper;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthServiceImp(UserRepository userRepository, SignInMapper signInMapper, SignUpMapper signUpMapper) {
+
+    public AuthServiceImp(UserRepository userRepository, SignInMapper signInMapper, SignUpMapper signUpMapper, JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.signInMapper = signInMapper;
         this.signUpMapper = signUpMapper;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -32,13 +36,14 @@ public class AuthServiceImp implements AuthService {
         validateSignUpRequest(signUpRequest);
         checkIfUserExists(signUpRequest);
         userRepository.save(signUpMapper.mapToEntity(signUpRequest));
-        return new SignUpResponse();
+
+        String jwt = jwtTokenProvider.generateJWT(signUpRequest.username());
+        return new SignUpResponse(jwt);
     }
 
     @Override
     public SignInResponse signInUser(SignInRequest signInRequest) {
         validateSignInRequest(signInRequest);
-
         User user = validateUserCredentials(signInRequest);
         return signInMapper.mapToResponse(user);
     }
